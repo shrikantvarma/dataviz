@@ -1,0 +1,190 @@
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+
+<style> circle {
+    fill: lightblue;
+    stroke: black;
+}
+.label { font: 12px sans-serif; }
+.tooltip {
+    position: absolute;
+    width: 200px;
+    height: 28px;
+    pointer-events: none;
+    font: 6px sans-serif;
+}
+
+a {
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+a:hover {
+    background-color: #ddd;
+    color: black;
+}
+
+.previous {
+    background-color: #f1f1f1;
+    color: black;
+}
+
+.next {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.round {
+    border-radius: 50%;
+}
+</style>
+<body onload="init()">
+<p> By 2011, Qatar reduced it's per capita emissions from 70 tonnnes to 44 tonnes, while still maintaining it's position as the top contributor. The United States reduced its emissions significantly and dropped out of the top 10.  </p>
+
+<svg width=500 height=500>
+
+
+</svg>
+<a href="/index.html" class="previous round">&#8249;</a>
+<a href="/index.html" class="previous">&laquo; Previous</a>
+<a href="/page3.html" class="next">Next &raquo;</a>
+
+<a href="/page3.html" class="next round">&#8250;</a>
+<script>
+    async function init() {
+        var width = 400;
+        var height = 400;
+        xdomain = [2000, 600000];
+        ydomain = [0, 50];
+        rdomain = [0, 30000000]
+
+
+/*        d3.select("a")
+            .append("a")
+            .attr("class","previous")
+            .html("&laquo; Previous");
+*/
+
+
+        // add the tooltip area to the webpage
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+        d3.csv("/highemissionspercapita_2011.csv").then(function (data) {
+//            var yScale = d3.scaleLog().base(10).domain([0, 2000000]).range([height, 0]);
+            var yScale = d3.scaleLinear().domain(ydomain).range([height, 0]).nice();
+
+            var yAxis = d3.axisLeft(yScale);
+            var yValue = function(d) { return d.Emissionspercapita;}
+
+            var countryvalue = function(d){ return d.CountryName;}
+
+//            var xScale = d3.scaleLog().base(10).domain([0, 2000000]).range([0, width]);
+//            var xScale = d3.scaleLinear().domain(xdomain).range([0, width]).nice();
+            var xScale = d3.scaleLog().base(10).domain(xdomain).range([0, width]).nice();
+//            var xAxis = d3.axisBottom(xScale).tickFormat(d => d/1000);
+            var xAxis = d3.axisBottom(xScale).tickValues([1000,10000,100000,500000]).tickFormat(d3.format("~s"));
+            var xValue = function(d) { return d.EmissionsTotal;}
+            var rScale = d3.scaleSqrt().domain(rdomain).range([0, 10]);
+            var chart = d3.select("svg")
+                .append("g")
+                .attr("transform", "translate(50,50)");
+
+            chart.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle")
+                .attr("cx", function (data) {
+                    return (xScale(+data.EmissionsTotal));
+                })
+                .attr("cy", function (data) {
+                    return (yScale(+data.Emissionspercapita));
+                })
+                .attr("r", function (data) {
+                    return (2 + rScale(+data.PopulationTotal));
+                })
+                .on("mouseover", function(d) {
+                    tooltip.transition()
+                        .duration(200)
+                        .style("opacity", .9);
+                    tooltip.html(countryvalue(d)+ "<br/> Total Emissions: " +  xValue(d)
+                        + "<br/> Emissions Per Capita: " + yValue(d) )
+                        .style("left", (d3.event.pageX + 5) + "px")
+                        .style("top", (d3.event.pageY - 28) + "px");
+                }).on("mouseout", function(d) {
+                tooltip.transition()
+                    .duration(500)
+                    .style("opacity", 0);
+            });
+
+            chart.selectAll("text")
+                .data(data)
+                .enter()
+                .append("text")
+                .text(function(data) {
+                    return data.CountryName
+                }).attr("x", function(data) {
+                return (xScale(+data.EmissionsTotal) + rScale(+data.PopulationTotal)+2);
+            })
+                .attr("y", function(data) {
+                    return (yScale(+data.Emissionspercapita));
+                })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "8px")
+                .attr("fill", "black");
+
+            svg = d3.select("svg");
+
+            svg.append("g")
+                .attr("transform", "translate(50,50)")
+                .call(yAxis);
+
+                d3.select("svg").append("text")
+                .attr("class", "label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 17)
+                    .attr("x",-80)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Emissions(per capita) in  Metric tonnes");
+
+
+            d3.select("svg")
+                .append("g")
+                .attr("transform", "translate(50,450)")
+                .call(xAxis);
+
+            d3.select("svg")
+                .append("text")
+                .attr("class", "label")
+                .attr("x", width)
+                .attr("y", 480)
+                .style("text-anchor", "end")
+                .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale")
+            ;
+            d3.select("svg").append("text")
+                .attr("x", (500 / 2))
+                .attr("y", 20)
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .style("text-decoration", "underline")
+                .text("Emissions Per Capita in 2011");
+
+
+
+
+        }).catch(function (error) {
+
+            console.log("error");
+        });
+
+    }
+
+</script>
+
+</body>
+</html>
+
