@@ -45,8 +45,8 @@ a:hover {
 <div class="row align-items-center">
     <div class="col-sm-2"><p id="value-time"></p></div>
     <div class="col-sm"><div id="slider-time"></div></div>
-<a href="/page2.html" class="previous round">&#8249;</a>
-<a href="/page2.html" class="previous">&laquo; Previous</a>
+<a href="/dataviz/page2.html" class="previous round">&#8249;</a>
+<a href="/dataviz/page2.html" class="previous">&laquo; Previous</a>
 <script>
     async function init() {
         var width = 400;
@@ -60,7 +60,7 @@ a:hover {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.csv("/CO2_AllDecades_Top10_new.csv").then(function (data) {
+        d3.csv("/dataviz/CO2_AllDecades_Top10_new.csv").then(function (data) {
 //            var yScale = d3.scaleLog().base(10).domain([0, 2000000]).range([height, 0]);
             var yScale = d3.scaleLinear().domain(ydomain).range([height, 0]).nice();
 
