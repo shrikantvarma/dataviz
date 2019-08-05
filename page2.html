@@ -47,11 +47,11 @@ a:hover {
 
 
 </svg>
-<a href="/index.html" class="previous round">&#8249;</a>
-<a href="/index.html" class="previous">&laquo; Previous</a>
-<a href="/page3.html" class="next">Next &raquo;</a>
+<a href="/dataviz/index.html" class="previous round">&#8249;</a>
+<a href="/dataviz/index.html" class="previous">&laquo; Previous</a>
+<a href="/dataviz/page3.html" class="next">Next &raquo;</a>
 
-<a href="/page3.html" class="next round">&#8250;</a>
+<a href="/dataviz/page3.html" class="next round">&#8250;</a>
 <script>
     async function init() {
         var width = 400;
@@ -73,7 +73,7 @@ a:hover {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.csv("/highemissionspercapita_2011.csv").then(function (data) {
+        d3.csv("/dataviz/highemissionspercapita_2011.csv").then(function (data) {
 //            var yScale = d3.scaleLog().base(10).domain([0, 2000000]).range([height, 0]);
             var yScale = d3.scaleLinear().domain(ydomain).range([height, 0]).nice();
 
