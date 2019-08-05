@@ -66,7 +66,7 @@
             <p> By 2011, Qatar reduced it's per capita emissions from 70 tonnnes to 44 tonnes, while still maintaining it's position as the top contributor. The United States and Canada, which  contributed significantly total emissions reduced its emissions significantly and dropped out of the top 10. This is great!  </p>
             <div class="slide" data-anchor="chart1">
                 <div class="chart chart1">
-                    <svg id="svg1" width=700 height=500>
+                    <svg id="svg1" width=1000 height=500>
                     </svg>
                 </div>
                 <div class="intro">
@@ -84,9 +84,9 @@
 </svg>
 <script>
     async function init() {
-        var width = 800;
+        var width = 900;
         var height = 400;
-        xdomain = [2000, 600000];
+        xdomain = [200, 2000000];
         ydomain = [0, 50];
         rdomain = [0, 30000000]
 
@@ -105,7 +105,7 @@
 
 
             var xScale = d3.scaleLog().base(10).domain(xdomain).range([0, width]).nice();
-            var xAxis = d3.axisBottom(xScale).tickValues([1000,10000,100000,500000]).tickFormat(d3.format("~s"));
+            var xAxis = d3.axisBottom(xScale).tickValues([10,100,1000,5000,10000,50000,100000,500000,1000000]).tickFormat(d3.format("~s"));
             var xValue = function(d) { return d.EmissionsTotal;}
             var rScale = d3.scaleSqrt().domain(rdomain).range([0, 10]);
             var chart = d3.select("svg")
@@ -166,7 +166,7 @@
                 .attr("class", "label")
                 .attr("transform", "rotate(-90)")
                 .attr("y", 10)
-                    .attr("x",-80)
+                    .attr("x",-140)
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
                 .text("Emissions(per capita) in  Metric tonnes");
@@ -180,7 +180,7 @@
             d3.select("svg")
                 .append("text")
                 .attr("class", "label")
-                .attr("x", width-100)
+                .attr("x", width-200)
                 .attr("y", 490)
                 .style("text-anchor", "end")
                 .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale")
