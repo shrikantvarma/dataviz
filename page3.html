@@ -1,57 +1,87 @@
-<html>
-<script src='https://d3js.org/d3.v5.min.js'></script>
-<style> circle {
-    fill: lightblue;
-    stroke: black;
-}
-.label { font: 12px sans-serif; }
-.tooltip {
-    position: absolute;
-    width: 200px;
-    height: 28px;
-    pointer-events: none;
-    font: 6px sans-serif;
-}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+    <style> circle {
+        fill: lightblue;
+        stroke: black;
+    }
+    .label {
+        font: 12px sans-serif;
+    }
+    .tooltip {
+        position: absolute;
+        width: 160px;
+        height: 40px;
+        pointer-events: none;
+        font: 10px sans-serif;
+        background: white;
+        border: 0px;
+        border-radius: 8px;
+    }
+    a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+    }
+    a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+    .previous {
+        background-color: #f1f1f1;
+        color: black;
+    }
+    .next {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .round {
+        border-radius: 50%;
+    }
+    </style>
+</head>
 
-a {
-    text-decoration: none;
-    display: inline-block;
-    padding: 8px 16px;
-}
-
-a:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-.previous {
-    background-color: #f1f1f1;
-    color: black;
-}
-
-.next {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.round {
-    border-radius: 50%;
-}
-</style>
-<body onload='init()'>
-<p> Here, you can explore the top 10 per capita CO2 emission changes for every decade from 1970-2010 by choosing the Select Year option  </p>
-<svg width=500 height=500>
-</svg>
-<div class="row align-items-center">
-    <div class="col-sm-2"><p id="value-time"></p></div>
-    <div class="col-sm"><div id="slider-time"></div></div>
-<a href="/dataviz/page2.html" class="previous round">&#8249;</a>
-<a href="/dataviz/page2.html" class="previous">&laquo; Previous</a>
+<body onload="init()">
+<div class="container">
+    <div class="jumbotron">
+        <h3>CarbonDioxide Emissions</h3>
+        <div id="fullpage">
+            <div class="section">
+            </div>
+            <p> Here, you can explore the top 10 per capita CO2 emission changes for every decade from 1970-2010 by
+                choosing the Select Year option </p>
+            <div class="slide" data-anchor="chart1">
+                <div class="chart chart1">
+                    <svg id="svg1" width=700 height=500>
+                    </svg>
+                    <div id="input" class="input-group pull-right">
+                    </div>
+                </div>
+                <div class="intro">
+                </div>
+            </div>
+            <div>
+                <input type=button onClick="location.href='page2.html'" value='Previous'
+                       style="float: right; margin:5px;">
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    async function init() {
-        var width = 400;
+    async
+
+    function init() {
+        var width = 600;
         var height = 400;
-        xdomain = [2000, 20000000];
+        xdomain = [200, 4000000];
         ydomain = [0, 70];
         rdomain = [0, 200000000]
 
@@ -60,21 +90,23 @@ a:hover {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.csv("/dataviz/CO2_AllDecades_Top10_new.csv").then(function (data) {
-//            var yScale = d3.scaleLog().base(10).domain([0, 2000000]).range([height, 0]);
+        d3.csv("CO2_AllDecades_Top10_new.csv").then(function (data) {
             var yScale = d3.scaleLinear().domain(ydomain).range([height, 0]).nice();
 
             var yAxis = d3.axisLeft(yScale);
-            var yValue = function(d) { return d.Emissionspercapita;}
+            var yValue = function (d) {
+                return d.Emissionspercapita;
+            }
 
-            var countryvalue = function(d){ return d.CountryName;}
+            var countryvalue = function (d) {
+                return d.CountryName;
+            }
 
-//            var xScale = d3.scaleLog().base(10).domain([0, 2000000]).range([0, width]);
-//            var xScale = d3.scaleLinear().domain(xdomain).range([0, width]).nice();
-//            var xAxis = d3.axisBottom(xScale).tickFormat(d => d/1000);
             var xScale = d3.scaleLog().base(10).domain(xdomain).range([0, width]).nice();
-            var xAxis = d3.axisBottom(xScale).tickValues([100,1000,10000,100000,1000000, 10000000]).tickFormat(d3.format("~s"));
-            var xValue = function(d) { return d.EmissionsTotal;}
+            var xAxis = d3.axisBottom(xScale).tickValues([100, 1000, 10000, 50000, 100000, 4000000]).tickFormat(d3.format("~s"));
+            var xValue = function (d) {
+                return d.EmissionsTotal;
+            }
             var rScale = d3.scaleSqrt().domain(rdomain).range([0, 10]);
 
             var chart = d3.select("svg")
@@ -85,8 +117,8 @@ a:hover {
                 .data(data)
                 .enter()
                 .append("circle")
-                .filter(function(data) {
-                    return (data.Year == '2010');
+                .filter(function (data) {
+                    return (data.Year == '2011');
                 })
                 .attr("cx", function (data) {
                     return (xScale(+data.EmissionsTotal));
@@ -97,16 +129,16 @@ a:hover {
                 .attr("r", function (data) {
                     return (5);
                 })
-                .on("mouseover", function(d) {
+                .on("mouseover", function (d) {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", .9);
-                    tooltip.html(countryvalue(d)+ "<br/> Total Emissions: " +  xValue(d)
-                        + "<br/> Emissions Per Capita: " + yValue(d) )
+                    tooltip.html("<strong>" + countryvalue(d) + "<br/> Total Emissions: " + xValue(d) + " MT"
+                        + "<br/> Emissions Per Capita: " + yValue(d) + " MT" + "</strong>")
                         .style("left", (d3.event.pageX + 5) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
                 })
-                .on("mouseout", function(d) {
+                .on("mouseout", function (d) {
                     tooltip.transition()
                         .duration(500)
                         .style("opacity", 0);
@@ -118,15 +150,33 @@ a:hover {
                 .attr("transform", "translate(50,50)")
                 .call(yAxis);
 
-                d3.select("svg").append("text")
+            d3.select("svg").append("text")
                 .attr("class", "label")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 17)
-                    .attr("x",-80)
+                .attr("y", 10)
+                .attr("x", -80)
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
                 .text("Emissions(per capita) in  Metric tonnes");
 
+            chart.selectAll("text")
+                .data(data)
+                .enter()
+                .append("text")
+                .filter(function (data) {
+                    return (data.Year == '2011');
+                })
+                .text(function (data) {
+                    return data.CountryName
+                }).attr("x", function (data) {
+                return (xScale(+data.EmissionsTotal) + 5);
+            })
+                .attr("y", function (data) {
+                    return (yScale(+data.Emissionspercapita));
+                })
+                .attr("font-family", "sans-serif")
+                .attr("font-size", "10px")
+                .attr("fill", "black");
 
             d3.select("svg")
                 .append("g")
@@ -137,30 +187,30 @@ a:hover {
                 .append("text")
                 .attr("class", "label")
                 .attr("x", width)
-                .attr("y", 480)
+                .attr("y", 490)
                 .style("text-anchor", "end")
-                .text("EEmissions(Total) in Metric Tonnes - Logarithmic Scale")
+                .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale")
             ;
 
-            var dataTime = d3.range(0, 10).map(function(d) {
+            var dataTime = d3.range(0, 10).map(function (d) {
                 return new Date(1995 + d, 10, 3);
             });
 
 // Create a select element
-            var select = d3.select("body")
+            var select = d3.select("#input")
                 .append("select")
-                .on("change", function() {
+                .on("change", function () {
                     // Log value it is changed to:
                     selval = this.value;
                     chart.remove();
-                        chart = d3.select("svg")
+                    chart = d3.select("svg")
                         .append("g")
                         .attr("transform", "translate(50,50)");
                     chart.selectAll("circle")
                         .data(data)
                         .enter()
                         .append("circle")
-                        .filter(function(data) {
+                        .filter(function (data) {
                             return data.Year == selval;
                         })
                         .attr("cx", function (data) {
@@ -172,51 +222,61 @@ a:hover {
                         .attr("r", function (data) {
                             return (5);
                         })
-                        .on("mouseover", function(d) {
+                        .on("mouseover", function (d) {
                             tooltip.transition()
                                 .duration(200)
-                                .style("opacity", .9);
-                            tooltip.html(countryvalue(d)+ "<br/> Total Emissions: " +  xValue(d)
-                                + "<br/> Emissions Per Capita: " + yValue(d) )
+                                .style("opacity", 0.9);
+                            tooltip.html("<strong>" + countryvalue(d) + "<br/> Total Emissions: " + xValue(d) + " MT"
+                                + "<br/> Emissions Per Capita: " + yValue(d) + " MT" + "</strong>")
                                 .style("left", (d3.event.pageX + 5) + "px")
-                                .style("top", (d3.event.pageY - 28) + "px");
+                                .style("top", (d3.event.pageY - 28) + "px")
+                            ;
                         })
-                        .on("mouseout", function(d) {
+                        .on("mouseout", function (d) {
                             tooltip.transition()
                                 .duration(500)
                                 .style("opacity", 0);
                         });
+                    chart.selectAll("text")
+                        .data(data)
+                        .enter()
+                        .append("text")
+                        .filter(function (data) {
+                            return data.Year == selval;
+                        })
+                        .text(function (data) {
+                            return data.CountryName
+                        }).attr("x", function (data) {
+                        return (xScale(+data.EmissionsTotal) + 5);
+                    })
+                        .attr("y", function (data) {
+                            return (yScale(+data.Emissionspercapita));
+                        })
+                        .attr("font-family", "sans-serif")
+                        .attr("font-size", "10px")
+                        .attr("fill", "black");
 
                 })
 
 // Add an initial option:
             select.append("option")
-                .html("Select Year:")
+                .html("2011");
 
 // Add the columns as options:
-            /*            var options = select.selectAll(null)
-                            .data(data)
-                            .enter()
-                            .append("option")
-                            .text(function(d) { return d.Year; });*/
-            var values = d3.keys(data.Year)
-
-
-            // Add the columns as options:
             var options = select.selectAll(null)
-                .data(d3.map(data, function(d){return d.Year;}).keys())
+                .data(d3.map(data, function (d) {
+                    return d.Year;
+                }).keys())
                 .enter()
                 .append("option")
-                .text(function(d) {
-                    return d; });
+                .text(function (d) {
+                    return d;
+                });
 
         }).catch(function (error) {
-
             console.log("error");
         });
-
     }
-
 </script>
 </body>
 </html>

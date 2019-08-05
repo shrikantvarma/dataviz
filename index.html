@@ -1,56 +1,82 @@
-<html>
-<script src='https://d3js.org/d3.v5.min.js'></script>
-<style> circle {
-    fill: lightblue;
-    stroke: black;
-}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+    <style> circle {
+        fill: lightblue;
+        stroke: black;
+    }
+    .label {
+        font: 12px sans-serif;
+    }
+    .tooltip {
+        position: absolute;
+        width: 160px;
+        height: 40px;
+        pointer-events: none;
+        font: 10px sans-serif;
+        background: white;
+        border: 0px;
+        border-radius: 8px;
+    }
+    a {
+        text-decoration: none;
+        display: inline-block;
+        padding: 8px 16px;
+    }
+    a:hover {
+        background-color: #ddd;
+        color: black;
+    }
+    .previous {
+        background-color: #f1f1f1;
+        color: black;
+    }
+    .next {
+        background-color: #4CAF50;
+        color: white;
+    }
+    .round {
+        border-radius: 50%;
+    }
+    </style>
+</head>
 
-.label {
-    font: 12px sans-serif;
-}
 
-.tooltip {
-    position: absolute;
-    width: 200px;
-    height: 28px;
-    pointer-events: none;
-    font: 6px sans-serif;
-}
-
-a {
-    text-decoration: none;
-    display: inline-block;
-    padding: 8px 16px;
-}
-
-a:hover {
-    background-color: #ddd;
-    color: black;
-}
-
-.previous {
-    background-color: #f1f1f1;
-    color: black;
-}
-
-.next {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.round {
-    border-radius: 50%;
-}
-</style>
 <body onload='init()'>
-<p> The chart below shows the top 10 countries with the highest CarbonDioxide emisssions per capita in 1970. Qatar has the highest emissions per capita at 70 metric tonnes per capita, followed by United Arab Emirates. The United States was also a top 10 contributer with 21 tonnes/capita.   </p>
-<svg width=500 height=500>
-</svg>
-<a href="page2.html" class="next">Next &raquo;</a>
-<a href="page2.html" class="next round">&#8250;</a>
+<div class="container" >
+    <div class="jumbotron">
+        <h3>CarbonDioxide Emissions</h3>
+    <div id="fullpage" >
+        <div class="section">
+        </div>
+        <p>The chart below shows the top 10 countries with the highest CarbonDioxide emisssions per capita in 1970. Qatar has the highest emissions per capita at 70 metric tonnes per capita, followed by United Arab Emirates. The United States was also a top 10 contributer with 21 tonnes/capita.</p>
+                <div class="slide" data-anchor="chart1">
+                <div class="chart chart1">
+                    <svg id="svg1" width=700 height=500>
+                    </svg>
+                </div>
+                <div class="intro">
+                </div>
+            </div>
+            <div>
+                <input type=button onClick="location.href='page2.html'" value='Next'  style="float: right;">
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script>
     async function init() {
-        var width = 400;
+        var width = 600;
         var height = 400;
         xdomain = [2000, 6000000];
         ydomain = [0, 70];
@@ -61,8 +87,7 @@ a:hover {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.csv("/dataviz/highemissionspercapita_1970.csv").then(function (data) {
-//            var yScale = d3.scaleLog().base(10).domain([0, 2000000]).range([height, 0]);
+        d3.csv("highemissionspercapita_1970.csv").then(function (data) {
             var yScale = d3.scaleLinear().domain(ydomain).range([height, 0]).nice();
             var yAxis = d3.axisLeft(yScale);
             var yValue = function (d) {
@@ -74,8 +99,6 @@ a:hover {
             }
 
             var xScale = d3.scaleLog().base(10).domain(xdomain).range([0, width]).nice();
-//            var xScale = d3.scaleLinear().domain(xdomain).range([0, width]).nice();
-//            var xAxis = d3.axisBottom(xScale).tickFormat(d => d / 1000);
             var xAxis = d3.axisBottom(xScale).tickValues([10,100,1000,10000,100000,1000000]).tickFormat(d3.format("~s"));
             var xValue = function (d) {
                 return d.EmissionsTotal;
@@ -95,17 +118,15 @@ a:hover {
                 .attr("cy", function (data) {
                     return (yScale(+data.Emissionspercapita));
                 })
-//                .attr("r", function (data) {
-//                    return (2 + rScale(+data.PopulationTotal));
                .attr("r", function (data) {
-                    return (2 + rScale(+data.PopulationTotal));
+                    return (5);
                 })
                 .on("mouseover", function (d) {
                     tooltip.transition()
                         .duration(200)
                         .style("opacity", .9);
-                    tooltip.html(countryvalue(d) + "<br/> Total Emissions: " + xValue(d)
-                        + "<br/> Emissions Per Capita: " + yValue(d))
+                    tooltip.html("<strong>" + countryvalue(d)+ "<br/> Total Emissions: " +  xValue(d) + " MT"
+                        + "<br/> Emissions Per Capita: " + yValue(d) + " MT" + "</strong>" )
                         .style("left", (d3.event.pageX + 5) + "px")
                         .style("top", (d3.event.pageY - 28) + "px");
                 }).on("mouseout", function (d) {
@@ -114,7 +135,6 @@ a:hover {
                     .style("opacity", 0);
             });
 
-
             chart.selectAll("text")
                 .data(data)
                 .enter()
@@ -122,13 +142,13 @@ a:hover {
                 .text(function(data) {
                     return data.CountryName
                 }).attr("x", function(data) {
-                return (xScale(+data.EmissionsTotal)+ rScale(+data.PopulationTotal)+2);
+                return (xScale(+data.EmissionsTotal)+ 5);
             })
                 .attr("y", function(data) {
                     return (yScale(+data.Emissionspercapita));
                 })
-        .attr("font-family", "sans-serif")
-                .attr("font-size", "8px")
+            .attr("font-family", "sans-serif")
+                .attr("font-size", "10px")
                 .attr("fill", "black");
 
             svg = d3.select("svg");
@@ -140,7 +160,7 @@ a:hover {
             d3.select("svg").append("text")
                 .attr("class", "label")
                 .attr("transform", "rotate(-90)")
-                .attr("y", 17)
+                .attr("y", 10)
                 .attr("x", -80)
                 .attr("dy", ".71em")
                 .style("text-anchor", "end")
@@ -156,7 +176,7 @@ a:hover {
                 .append("text")
                 .attr("class", "label")
                 .attr("x", (width))
-                .attr("y", 480)
+                .attr("y", 490)
                 .style("text-anchor", "end")
                 .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale");
 
@@ -169,10 +189,8 @@ a:hover {
                 .text("Emissions Per Capita in 1970");
 
         }).catch(function (error) {
-
             console.log("error");
         });
-
     }
 
 </script>
