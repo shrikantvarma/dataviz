@@ -57,10 +57,10 @@
     <div id="fullpage" >
         <div class="section">
         </div>
-        <p>The chart below shows the top 10 countries with the highest CarbonDioxide emisssions per capita in 1970. Qatar has the highest emissions per capita at 70 metric tonnes per capita, followed by United Arab Emirates. The United States was also a top 10 contributer with 21 tonnes/capita.</p>
+        <p>The chart below shows the top 10 countries with the highest Carbon Dioxide emisssions per capita in 1970. Qatar has the highest emissions per capita at 70 metric tonnes, followed by United Arab Emirates. United States and Canada were also top 10s with 21 and 16 metric tonnes/capita. These two countries also have significant contribution to the total emission levels at 4.3 million MT and 341 kilo MT  </p>
                 <div class="slide" data-anchor="chart1">
                 <div class="chart chart1">
-                    <svg id="svg1" width=700 height=500>
+                    <svg id="svg1" width=900 height=500>
                     </svg>
                 </div>
                 <div class="intro">
@@ -76,7 +76,7 @@
 
 <script>
     async function init() {
-        var width = 600;
+        var width = 800;
         var height = 400;
         xdomain = [2000, 6000000];
         ydomain = [0, 70];
@@ -175,13 +175,13 @@
             d3.select("svg")
                 .append("text")
                 .attr("class", "label")
-                .attr("x", (width))
+                .attr("x", (width-100))
                 .attr("y", 490)
                 .style("text-anchor", "end")
                 .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale");
 
             d3.select("svg").append("text")
-                .attr("x", (500 / 2))
+                .attr("x", (width / 2))
                 .attr("y", 20)
                 .attr("text-anchor", "middle")
                 .style("font-size", "16px")

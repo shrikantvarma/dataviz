@@ -56,8 +56,9 @@
         <div id="fullpage">
             <div class="section">
             </div>
-            <p> Here, you can explore the top 10 per capita CO2 emission changes for every decade from 1970-2010 by
-                choosing the Select Year option </p>
+            <p> In this chart, you can explore the per capita Carbon Dioxide emissions further.
+                The chart below currently shows the year 2011 per capita consumption for the top 10 countries.By changing the Year select option at the bottom,
+                you can explore the trends for the decades from 1970 to 2010 </p>
             <div class="slide" data-anchor="chart1">
                 <div class="chart chart1">
                     <svg id="svg1" width=700 height=500>
@@ -79,7 +80,7 @@
     async
 
     function init() {
-        var width = 600;
+        var width = 800;
         var height = 400;
         xdomain = [200, 4000000];
         ydomain = [0, 70];
@@ -186,7 +187,7 @@
             d3.select("svg")
                 .append("text")
                 .attr("class", "label")
-                .attr("x", width)
+                .attr("x", width - 100)
                 .attr("y", 490)
                 .style("text-anchor", "end")
                 .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale")

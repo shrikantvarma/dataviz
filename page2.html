@@ -63,7 +63,7 @@
         <div id="fullpage" >
             <div class="section">
             </div>
-            <p> By 2011, Qatar reduced it's per capita emissions from 70 tonnnes to 44 tonnes, while still maintaining it's position as the top contributor. The United States reduced its emissions significantly and dropped out of the top 10.  </p>
+            <p> By 2011, Qatar reduced it's per capita emissions from 70 tonnnes to 44 tonnes, while still maintaining it's position as the top contributor. The United States and Canada, which  contributed significantly total emissions reduced its emissions significantly and dropped out of the top 10. This is great!  </p>
             <div class="slide" data-anchor="chart1">
                 <div class="chart chart1">
                     <svg id="svg1" width=700 height=500>
@@ -84,7 +84,7 @@
 </svg>
 <script>
     async function init() {
-        var width = 600;
+        var width = 800;
         var height = 400;
         xdomain = [2000, 600000];
         ydomain = [0, 50];
@@ -180,13 +180,13 @@
             d3.select("svg")
                 .append("text")
                 .attr("class", "label")
-                .attr("x", width)
+                .attr("x", width-100)
                 .attr("y", 490)
                 .style("text-anchor", "end")
                 .text("Emissions(Total) in Metric Tonnes - Logarithmic Scale")
             ;
             d3.select("svg").append("text")
-                .attr("x", (500 / 2))
+                .attr("x", (width / 2))
                 .attr("y", 20)
                 .attr("text-anchor", "middle")
                 .style("font-size", "16px")
