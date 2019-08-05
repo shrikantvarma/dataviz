@@ -46,8 +46,8 @@ a:hover {
 <p> The chart below shows the top 10 countries with the highest CarbonDioxide emisssions per capita in 1970. Qatar has the highest emissions per capita at 70 metric tonnes per capita, followed by United Arab Emirates. The United States was also a top 10 contributer with 21 tonnes/capita.   </p>
 <svg width=500 height=500>
 </svg>
-<a href="page2.html" class="next">Next &raquo;</a>
-<a href="page2.html" class="next round">&#8250;</a>
+<a href="/dataviz/page2.html" class="next">Next &raquo;</a>
+<a href="/dataviz/page2.html" class="next round">&#8250;</a>
 <script>
     async function init() {
         var width = 400;
@@ -61,7 +61,7 @@ a:hover {
             .attr("class", "tooltip")
             .style("opacity", 0);
 
-        d3.csv("highemissionspercapita_1970.csv").then(function (data) {
+        d3.csv("/dataviz/highemissionspercapita_1970.csv").then(function (data) {
 //            var yScale = d3.scaleLog().base(10).domain([0, 2000000]).range([height, 0]);
             var yScale = d3.scaleLinear().domain(ydomain).range([height, 0]).nice();
             var yAxis = d3.axisLeft(yScale);
